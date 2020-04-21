@@ -1,3 +1,3 @@
 # Chaos Game
 
-An implementation of some [chaos game](https://www.wikiwand.com/en/Chaos_game).
+Implementation of some [chaos games](https://www.wikiwand.com/en/Chaos_game).
