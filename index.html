@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html>
+  <meta charset="UTF-8">
+  <title>Chaos Game</title>
+
+  <style>
+
+  body {
+    background-color: black;
+  }
+
+  #container {
+    width: 100%;
+    text-align: center;
+  }
+
+  #plot {
+    display: inline-block;
+    background-color: white;
+  }
+
+  </style>
+
+  <body>
+
+    <div id="container">
+      <canvas id="plot" ></canvas>
+    </div>
+
+    <script>
+    // Get canvas object and context
+    const canvas = document.getElementById('plot');
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = 'black' ;
+
+    ctx.canvas.height = window.innerHeight - 20;
+    ctx.canvas.width  = ctx.canvas.height;
+
+    // Set grid size and boundaries
+    const urlParams = new URLSearchParams(window.location.search);
+    const gridSize = parseInt(urlParams.get('gridSize') || 200) ;
+
+    const [xMin, xMax, yMin, yMax] = [0, gridSize, 0, gridSize];
+
+    const xScale = ctx.canvas.width/(xMax - xMin);
+    const yScale = ctx.canvas.height/(yMax - yMin);
+
+    const xSize = Math.ceil(ctx.canvas.width/(xMax - xMin));
+    const ySize = Math.ceil(ctx.canvas.height/(yMax - yMin));
+
+    const plotCell = (x, y) => {
+      ctx.fillRect(Math.floor(x*xScale), Math.floor(y*yScale), xSize, ySize);
+    }
+
+    // Define triangle vertices
+    let triangle = [{x: gridSize/2, y: 0}, {x: 0, y: gridSize - 1}, {x: gridSize - 1, y: gridSize - 1}]
+    triangle.forEach(p => plotCell(p.x, p.y));
+
+    const randomVertice = () => {
+      let r = Math.random();
+      if(r <= 1.0/3.0) {
+        return triangle[0];
+      } else if(r <= 2.0/3.0) {
+        return triangle[1];
+      } else {
+        return triangle[2];
+      }
+    }
+
+    const newPoint = (p1, p2) => {
+      return {x: (p1.x + p2.x)/2.0, y: (p1.y + p2.y)/2.0};
+    }
+
+    const start = () => {
+      let p = {x: gridSize/3, y: gridSize/3};
+      plotCell(p.x, p.y)
+
+      setInterval(() => {
+        let vertice = randomVertice();
+        p = newPoint(p, vertice);
+        plotCell(p.x, p.y);
+      }, 1);
+    }
+
+    start();
+  </script>
+  </body>
+</html>
